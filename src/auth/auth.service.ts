@@ -11,24 +11,46 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
+  // async register(registerDto: RegisterDto) {
+  //   // Créer l'utilisateur
+  //   const user = await this.usersService.create(registerDto);
+
+  //   // Générer le token
+  //   const token = this.generateToken(user.id, user.email);
+
+  //   return {
+  //     user: {
+  //       id: user.id,
+  //       email: user.email,
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       age: user.age,
+  //       gender: user.gender,
+  //     },
+  //     access_token: token,
+  //   };
+  // }
   async register(registerDto: RegisterDto) {
-    // Créer l'utilisateur
-    const user = await this.usersService.create(registerDto);
+    try {
+      const user = await this.usersService.create(registerDto);
+      const token = this.generateToken(user.id, user.email);
 
-    // Générer le token
-    const token = this.generateToken(user.id, user.email);
-
-    return {
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        age: user.age,
-        gender: user.gender,
-      },
-      access_token: token,
-    };
+      return {
+        user: {
+          id: user.id,
+          email: user.email,
+          firstName: user.firstName,
+          lastName: user.lastName,
+          age: user.age,
+          gender: user.gender,
+        },
+        access_token: token,
+      };
+    } catch (err) {
+      // console.error('Erreur dans AuthService.register :', err);
+      // throw err; // ou throw new InternalServerErrorException()
+      throw new UnauthorizedException('Email ou mot de passe incorrect');
+    }
   }
 
   async login(loginDto: LoginDto) {
