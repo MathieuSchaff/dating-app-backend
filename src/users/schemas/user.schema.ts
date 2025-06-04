@@ -79,6 +79,3 @@ export const UserSchema = SchemaFactory.createForClass(User);
 
 // Index pour la géolocalisation
 UserSchema.index({ location: '2dsphere' });
-
-// Index pour l'email (déjà unique)
-UserSchema.index({ email: 1 });
